@@ -8,8 +8,6 @@ from .util import lookup_object
 
 import socket
 
-iparray = ["10.255.253.20","10.255.253.21","10.255.253.29"]
-
 
 available = {}
 
@@ -99,20 +97,6 @@ def mqtt_bridge_node():
 
     print("highest priority: ", key)
 
-       
-
-    # while not mqtt_client.connected_flag: #wait in loop
-    #     try:
-    #         for i in iparray:
-    #             # selectedip = iparray[select]
-    #             mqtt_client.on_connect = _on_connect
-    #             mqtt_client.on_disconnect = _on_disconnect
-    #             mqtt_client.connect(host=i,**conn_params)
-    #             mqtt_client.loop_start()
-
-    #     except ConnectionRefusedError:
-    #         select += 1
-    #         # print("new selection", select)
 
     # configure bridges
     bridges = []
