@@ -6,6 +6,15 @@ from .bridge import create_bridge
 from .mqtt_client import create_private_path_extractor
 from .util import lookup_object
 
+import socket
+
+iparray = ["10.255.253.20","10.255.253.21","10.255.253.29"]
+
+
+available = {}
+
+global connected
+connected = 0
 
 def create_config(mqtt_client, serializer, deserializer, mqtt_private_path):
     if isinstance(serializer, str):
@@ -32,11 +41,21 @@ def mqtt_bridge_node():
     mqtt_private_path = mqtt_params.pop("private_path", "")
     bridge_params = params.get("bridge", [])
 
+    ipparams = params.pop("ip",{})
+    print(ipparams)
+    brokers = list(ipparams.values())
+    print(brokers)
+
+
+
     # create mqtt client
     mqtt_client_factory_name = rospy.get_param(
         "~mqtt_client_factory", ".mqtt_client:default_mqtt_client_factory")
     mqtt_client_factory = lookup_object(mqtt_client_factory_name)
     mqtt_client = mqtt_client_factory(mqtt_params)
+
+    # initialise connection_flag
+    mqtt_client.connected_flag=False
 
     # load serializer and deserializer
     serializer = params.get('serializer', 'msgpack:dumps')
@@ -48,9 +67,52 @@ def mqtt_bridge_node():
     inject.configure(config)
 
     # configure and connect to MQTT broker
-    mqtt_client.on_connect = _on_connect
-    mqtt_client.on_disconnect = _on_disconnect
-    mqtt_client.connect(**conn_params)
+    select = 0
+
+
+    for broker in brokers:
+        host = broker['host']
+        port = broker['port']
+        priority = broker['priority']
+        try:
+            socket.create_connection((host, port), timeout=2)
+            available[host] = priority
+            print(f"Ping to {host}:{port} succeeded")
+
+        except socket.timeout:
+            print(f"Ping to {host}:{port} failed")
+        
+        except ConnectionRefusedError:
+            print(f"Ping to {host}:{port} failed")
+        
+
+
+    
+    print("Ping Test Complete")
+    marklist = sorted(available.items(), key=lambda x:x[1])
+    sortdict = dict(marklist) 
+    print(sortdict)
+    key_list = list(sortdict.keys())
+    val_list = list(sortdict.values())
+    print(min(val_list))
+    key = list(filter(lambda x: sortdict[x] == min(val_list), sortdict))[0]
+
+    print("highest priority: ", key)
+
+       
+
+    # while not mqtt_client.connected_flag: #wait in loop
+    #     try:
+    #         for i in iparray:
+    #             # selectedip = iparray[select]
+    #             mqtt_client.on_connect = _on_connect
+    #             mqtt_client.on_disconnect = _on_disconnect
+    #             mqtt_client.connect(host=i,**conn_params)
+    #             mqtt_client.loop_start()
+
+    #     except ConnectionRefusedError:
+    #         select += 1
+    #         # print("new selection", select)
 
     # configure bridges
     bridges = []
@@ -58,6 +120,11 @@ def mqtt_bridge_node():
         bridges.append(create_bridge(**bridge_args))
 
     # start MQTT loop
+    mqtt_client._host = key
+    mqtt_client._port = port
+    mqtt_client.on_connect = _on_connect
+    mqtt_client.on_disconnect = _on_disconnect
+    mqtt_client.connect(key, port, 60)
     mqtt_client.loop_start()
 
     # register shutdown callback and spin
@@ -67,7 +134,14 @@ def mqtt_bridge_node():
 
 
 def _on_connect(client, userdata, flags, response_code):
+    global connected
     rospy.loginfo('MQTT connected')
+    if response_code == 0:
+        client.connected_flag=True #set flag
+        connected = 1
+        print(f"Connected to the broker {client._host}:{client._port}")
+    else:
+        print(f"Connection to the broker {client._host}:{client._port} failed with return code", response_code)
 
 
 def _on_disconnect(client, userdata, response_code):
