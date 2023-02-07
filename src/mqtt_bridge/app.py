@@ -38,6 +38,7 @@ def mqtt_bridge_node():
     conn_params = mqtt_params.pop("connection")
     mqtt_private_path = mqtt_params.pop("private_path", "")
     bridge_params = params.get("bridge", [])
+    print(bridge_params)
 
     ipparams = params.pop("ip",{})
     print(ipparams)
@@ -97,6 +98,12 @@ def mqtt_bridge_node():
 
     print("highest priority: ", key)
 
+    mqtt_client._host = key
+    mqtt_client._port = port
+    mqtt_client.on_connect = _on_connect
+    mqtt_client.on_disconnect = _on_disconnect
+    mqtt_client.connect(key, port, 60)
+
 
     # configure bridges
     bridges = []
@@ -104,11 +111,6 @@ def mqtt_bridge_node():
         bridges.append(create_bridge(**bridge_args))
 
     # start MQTT loop
-    mqtt_client._host = key
-    mqtt_client._port = port
-    mqtt_client.on_connect = _on_connect
-    mqtt_client.on_disconnect = _on_disconnect
-    mqtt_client.connect(key, port, 60)
     mqtt_client.loop_start()
 
     # register shutdown callback and spin

@@ -42,8 +42,11 @@ class RosToMqttBridge(Bridge):
     """
 
     def __init__(self, topic_from: str, topic_to: str, msg_type: rospy.Message, frequency: Optional[float] = None):
+        params = rospy.get_param("~")
+        vehiclenum = params.pop("vehicle")
         self._topic_from = topic_from
-        self._topic_to = self._extract_private_path(topic_to)
+        self._topic_to = self._extract_private_path(str(vehiclenum + "/" + topic_to))
+        print(self._topic_to)
         self._last_published = rospy.get_time()
         self._interval = 0 if frequency is None else 1.0 / frequency
         rospy.Subscriber(topic_from, msg_type, self._callback_ros)
@@ -69,6 +72,7 @@ class MqttToRosBridge(Bridge):
     def __init__(self, topic_from: str, topic_to: str, msg_type: Type[rospy.Message],
                  frequency: Optional[float] = None, queue_size: int = 10):
         self._topic_from = self._extract_private_path(topic_from)
+        print("subscribed to: " + self._topic_from)
         self._topic_to = topic_to
         self._msg_type = msg_type
         self._queue_size = queue_size
@@ -82,6 +86,8 @@ class MqttToRosBridge(Bridge):
 
     def _callback_mqtt(self, client: mqtt.Client, userdata: Dict, mqtt_msg: mqtt.MQTTMessage):
         """ callback from MQTT """
+        self._topic_to = mqtt_msg.topic
+        print(self._topic_to)
         rospy.logdebug("MQTT received from {}".format(mqtt_msg.topic))
         now = rospy.get_time()
 
