@@ -26,13 +26,58 @@ mqtt:
 bridge:
   # ping pong
   - factory: mqtt_bridge.bridge:RosToMqttBridge
-    msg_type: std_msgs.msg:Bool
-    topic_from: /ping
-    topic_to: ping
+    msg_type: nav_msgs.msg:Odometry
+    topic_from: /state_estimation
+    topic_to: odometry
   - factory: mqtt_bridge.bridge:MqttToRosBridge
-    msg_type: std_msgs.msg:Bool
-    topic_from: vehicle/+/ping
+    msg_type: nav_msgs.msg:Odometry
+    topic_from: vehicle/+/odometry
     topic_to: /pong
+  # echo back
+  - factory: mqtt_bridge.bridge:RosToMqttBridge
+    msg_type: std_msgs.msg:Int32MultiArray
+    topic_from: /sensor_coverage_planner/covered_subspaces
+    topic_to: coveredsubspace
+  - factory: mqtt_bridge.bridge:MqttToRosBridge
+    msg_type: std_msgs.msg:Int32MultiArray
+    topic_from: vehicle/+/coveredsubspace
+    topic_to: /covered_subspaces_2
+    # echo back
+  - factory: mqtt_bridge.bridge:RosToMqttBridge
+    msg_type: std_msgs.msg:Int32MultiArray
+    topic_from: /sensor_coverage_planner/ugv_exploring_subspaces
+    topic_to: exploringsubspace
+  - factory: mqtt_bridge.bridge:MqttToRosBridge
+    msg_type: std_msgs.msg:Int32MultiArray
+    topic_from: vehicle/+/exploringsubspace
+    topic_to: /exploring_subspaces_2
+    # echo back
+  - factory: mqtt_bridge.bridge:RosToMqttBridge
+    msg_type: std_msgs.msg:Int32
+    topic_from: /sensor_coverage_planner/priority
+    topic_to: ugvpriority
+  - factory: mqtt_bridge.bridge:MqttToRosBridge
+    msg_type: std_msgs.msg:Int32
+    topic_from: vehicle/+/ugvpriority
+    topic_to: /ugv2priority
+    # echo back
+  - factory: mqtt_bridge.bridge:RosToMqttBridge
+    msg_type: std_msgs.msg:Int32
+    topic_from: /sensor_coverage_planner/redflag
+    topic_to: redflag
+  - factory: mqtt_bridge.bridge:MqttToRosBridge
+    msg_type: std_msgs.msg:Int32
+    topic_from: vehicle/+/redflag
+    topic_to: /ugv2redflag
+  # # ping pong
+  # - factory: mqtt_bridge.bridge:RosToMqttBridge
+  #   msg_type: std_msgs.msg:Bool
+  #   topic_from: /ping
+  #   topic_to: ping
+  # - factory: mqtt_bridge.bridge:MqttToRosBridge
+  #   msg_type: std_msgs.msg:Bool
+  #   topic_from: vehicle/+/ping
+  #   topic_to: /pong
   # # echo back
   # - factory: mqtt_bridge.bridge:RosToMqttBridge
   #   msg_type: std_msgs.msg:String
