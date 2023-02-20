@@ -96,4 +96,3 @@ bridge:
   #   msg_type: std_msgs.msg:String
   #   topic_from: ~/echo
   #   topic_to: /private/back
-  # to delete
