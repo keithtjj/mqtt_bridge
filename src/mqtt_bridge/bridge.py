@@ -85,7 +85,7 @@ class MqttToRosBridge(Bridge):
     def _callback_mqtt(self, client: mqtt.Client, userdata: Dict, mqtt_msg: mqtt.MQTTMessage):
         """ callback from MQTT """
         self._topic_to = mqtt_msg.topic
-        print(self._topic_to)
+        # print(self._topic_to)
         self._publisher = rospy.Publisher(
             self._topic_to, self._msg_type, queue_size=self._queue_size)
         rospy.logdebug("MQTT received from {}".format(mqtt_msg.topic))
