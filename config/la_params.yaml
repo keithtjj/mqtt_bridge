@@ -1,6 +1,6 @@
 ip:
   first:
-    host: 10.255.253.148
+    host: 10.255.252.152
     port: 1883
     priority: 1
   second:
@@ -12,7 +12,7 @@ ip:
     port: 1883
     priority: 3
   
-vehicle: vehicle/one
+vehicle: vehicle/1
 
 mqtt:
   client:
@@ -24,75 +24,53 @@ mqtt:
 #serializer: json:dumps
 #deserializer: json:loads
 bridge:
-  # ping pong
+    # Publish Odometry from ROS to MQTT
   - factory: mqtt_bridge.bridge:RosToMqttBridge
     msg_type: nav_msgs.msg:Odometry
     topic_from: /state_estimation
-    topic_to: odometry
+    topic_to: Odometry
+    # Subscribe Odometry from MQTT to ROS
   - factory: mqtt_bridge.bridge:MqttToRosBridge
     msg_type: nav_msgs.msg:Odometry
-    topic_from: vehicle/+/odometry
+    topic_from: vehicle/+/Odometry
     topic_to: /pong
-  # echo back
+    # Publish Covered Subspace Indices from ROS to MQTT
   - factory: mqtt_bridge.bridge:RosToMqttBridge
     msg_type: std_msgs.msg:Int32MultiArray
     topic_from: /sensor_coverage_planner/covered_subspaces
-    topic_to: coveredsubspace
+    topic_to: Covered_subspaces
+    # Subscribe Covered Subspace Indices from MQTT to ROS  
   - factory: mqtt_bridge.bridge:MqttToRosBridge
     msg_type: std_msgs.msg:Int32MultiArray
-    topic_from: vehicle/+/coveredsubspace
-    topic_to: /covered_subspaces_2
-    # echo back
+    topic_from: vehicle/+/Covered_subspaces
+    topic_to: /covered_subspaces
+    # Publish Exploring Subspace Indices from ROS to MQTT
   - factory: mqtt_bridge.bridge:RosToMqttBridge
     msg_type: std_msgs.msg:Int32MultiArray
     topic_from: /sensor_coverage_planner/ugv_exploring_subspaces
-    topic_to: exploringsubspace
+    topic_to: Exploring_subspaces
+    # Subscribe Exploring Subspace Indices from MQTT to ROS  
   - factory: mqtt_bridge.bridge:MqttToRosBridge
     msg_type: std_msgs.msg:Int32MultiArray
-    topic_from: vehicle/+/exploringsubspace
+    topic_from: vehicle/+/Exploring_subspaces
     topic_to: /exploring_subspaces_2
-    # echo back
+    # Publish Robot Priority from ROS to MQTT
   - factory: mqtt_bridge.bridge:RosToMqttBridge
     msg_type: std_msgs.msg:Int32
     topic_from: /sensor_coverage_planner/priority
-    topic_to: ugvpriority
+    topic_to: Priority
+    # Subscribe Robot Priority from MQTT to ROS  
   - factory: mqtt_bridge.bridge:MqttToRosBridge
     msg_type: std_msgs.msg:Int32
-    topic_from: vehicle/+/ugvpriority
+    topic_from: vehicle/+/Priority
     topic_to: /ugv2priority
-    # echo back
+    # Publish Availability from ROS to MQTT
   - factory: mqtt_bridge.bridge:RosToMqttBridge
-    msg_type: std_msgs.msg:Int32
-    topic_from: /sensor_coverage_planner/redflag
-    topic_to: redflag
+    msg_type: std_msgs.msg:Bool
+    topic_from: /Availability
+    topic_to: Availability
+    # Subscribe Availability from MQTT to ROS  
   - factory: mqtt_bridge.bridge:MqttToRosBridge
-    msg_type: std_msgs.msg:Int32
-    topic_from: vehicle/+/redflag
-    topic_to: /ugv2redflag
-  # # ping pong
-  # - factory: mqtt_bridge.bridge:RosToMqttBridge
-  #   msg_type: std_msgs.msg:Bool
-  #   topic_from: /ping
-  #   topic_to: ping
-  # - factory: mqtt_bridge.bridge:MqttToRosBridge
-  #   msg_type: std_msgs.msg:Bool
-  #   topic_from: vehicle/+/ping
-  #   topic_to: /pong
-  # # echo back
-  # - factory: mqtt_bridge.bridge:RosToMqttBridge
-  #   msg_type: std_msgs.msg:String
-  #   topic_from: /echo
-  #   topic_to: echo
-  # - factory: mqtt_bridge.bridge:MqttToRosBridge
-  #   msg_type: std_msgs.msg:String
-  #   topic_from: vehicle/one/echo
-  #   topic_to: /back
-  # # private path
-  # - factory: mqtt_bridge.bridge:RosToMqttBridge
-  #   msg_type: std_msgs.msg:String
-  #   topic_from: /private/echo
-  #   topic_to: ~/echo
-  # - factory: mqtt_bridge.bridge:MqttToRosBridge
-  #   msg_type: std_msgs.msg:String
-  #   topic_from: ~/echo
-  #   topic_to: /private/back
+    msg_type: std_msgs.msg:Bool
+    topic_from: vehicle/+/Availability
+    topic_to: /ugv2priority
