@@ -38,12 +38,12 @@ def mqtt_bridge_node():
     conn_params = mqtt_params.pop("connection")
     mqtt_private_path = mqtt_params.pop("private_path", "")
     bridge_params = params.get("bridge", [])
-    print(bridge_params)
+    # print(bridge_params)
 
     ipparams = params.pop("ip",{})
-    print(ipparams)
+    # print(ipparams)
     brokers = list(ipparams.values())
-    print(brokers)
+    # print(brokers)
 
 
 
@@ -90,10 +90,10 @@ def mqtt_bridge_node():
     print("Ping Test Complete")
     marklist = sorted(available.items(), key=lambda x:x[1])
     sortdict = dict(marklist) 
-    print(sortdict)
+    # print(sortdict)
     key_list = list(sortdict.keys())
     val_list = list(sortdict.values())
-    print(min(val_list))
+    # print(min(val_list))
     key = list(filter(lambda x: sortdict[x] == min(val_list), sortdict))[0]
 
     print("highest priority: ", key)

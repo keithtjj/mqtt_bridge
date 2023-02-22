@@ -4,7 +4,7 @@ ip:
     port: 1883
     priority: 1
   second:
-    host: 10.255.253.29
+    host: 10.255.252.152
     port: 1883
     priority: 2
   third:
@@ -12,7 +12,7 @@ ip:
     port: 1883
     priority: 3
   
-vehicle: vehicle/1
+vehicle: vehicle/3
 
 mqtt:
   client:
@@ -57,7 +57,7 @@ bridge:
     # Publish Robot Priority from ROS to MQTT
   - factory: mqtt_bridge.bridge:RosToMqttBridge
     msg_type: std_msgs.msg:Int32
-    topic_from: /sensor_coverage_planner/priority
+    topic_from: /Priority
     topic_to: Priority
     # Subscribe Robot Priority from MQTT to ROS  
   - factory: mqtt_bridge.bridge:MqttToRosBridge
