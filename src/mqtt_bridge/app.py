@@ -7,6 +7,10 @@ from .mqtt_client import create_private_path_extractor
 from .util import lookup_object
 
 import socket
+import sys
+import time
+
+import subprocess
 
 
 available = {}
@@ -68,18 +72,20 @@ def mqtt_bridge_node():
     # configure and connect to MQTT broker
     select = 0
 
-
+    time.sleep(2)
     for broker in brokers:
         host = broker['host']
         port = broker['port']
         priority = broker['priority']
         try:
-            socket.create_connection((host, port), timeout=2)
-            available[host] = priority
-            print(f"Ping to {host}:{port} succeeded")
-
-        except socket.timeout:
-            print(f"Ping to {host}:{port} failed")
+            res = subprocess.call(['ping', '-c', '3', host])
+            if res == 0:
+                available[host] = priority
+                print(f"Ping to {host}:{port} succeeded")
+            elif res == 2:
+                print(f"Ping to {host}:{port} failed")
+            else:
+                print(f"Ping to {host}:{port} failed")
         
         except ConnectionRefusedError:
             print(f"Ping to {host}:{port} failed")
