@@ -74,3 +74,13 @@ bridge:
     msg_type: std_msgs.msg:Bool
     topic_from: vehicle/+/Availability
     topic_to: /ugv2priority
+    # Publish Availability from ROS to MQTT
+  - factory: mqtt_bridge.bridge:RosToMqttBridge
+    msg_type: geometry_msgs.msg:PointStamped
+    topic_from: /tare_way_point
+    topic_to: tare_waypoint
+    # Subscribe Availability from MQTT to ROS  
+  - factory: mqtt_bridge.bridge:MqttToRosBridge
+    msg_type: geometry_msgs.msg:PointStamped
+    topic_from: vehicle/+/tare_waypoint
+    topic_to: /ugv2priority
