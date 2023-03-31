@@ -1,14 +1,14 @@
 ip:
   first:
-    host: 192.168.50.223
+    host: broker
     port: 1883
     priority: 1
   second:
-    host: 10.255.252.152
+    host: ugv1
     port: 1883
     priority: 2
   third:
-    host: localhost
+    host: ugv2
     port: 1883
     priority: 3
   
@@ -84,3 +84,13 @@ bridge:
     msg_type: geometry_msgs.msg:PointStamped
     topic_from: vehicle/+/tare_waypoint
     topic_to: /ugv2priority
+    # Publish Poi from ROS to MQTT
+  - factory: mqtt_bridge.bridge:RosToMqttBridge
+    msg_type: geometry_msgs.msg:PoseStamped
+    topic_from: /poi
+    topic_to: poi
+    # Subscribe Poi from MQTT to ROS  
+  - factory: mqtt_bridge.bridge:MqttToRosBridge
+    msg_type: geometry_msgs.msg:PoseStamped
+    topic_from: poi
+    topic_to: /poi
