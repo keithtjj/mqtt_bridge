@@ -87,10 +87,10 @@ bridge:
     # Publish Poi from ROS to MQTT
   - factory: mqtt_bridge.bridge:RosToMqttBridge
     msg_type: geometry_msgs.msg:PoseStamped
-    topic_from: /poi
+    topic_from: /poi_out
     topic_to: poi
     # Subscribe Poi from MQTT to ROS  
   - factory: mqtt_bridge.bridge:MqttToRosBridge
     msg_type: geometry_msgs.msg:PoseStamped
-    topic_from: poi
-    topic_to: /poi
+    topic_from: vehicle/+/poi
+    topic_to: /poi_in
