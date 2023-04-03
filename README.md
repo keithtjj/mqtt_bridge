@@ -1,75 +1,5 @@
 # mqtt_bridge
 
-[![CircleCI](https://circleci.com/gh/groove-x/mqtt_bridge.svg?style=svg)](https://circleci.com/gh/groove-x/mqtt_bridge)
-
-mqtt_bridge provides a functionality to bridge between ROS and MQTT in bidirectional.
-
-*mqtt_bridge is not actively maintained now. Feel free to check out [mqtt_client](https://github.com/ika-rwth-aachen/mqtt_client), a high-performance C++ ROS nodelet with recent development!*
-
-
-## Principle
-
-`mqtt_bridge` uses ROS message as its protocol. Messages from ROS are serialized by json (or messagepack) for MQTT, and messages from MQTT are deserialized for ROS topic. So MQTT messages should be ROS message compatible. (We use `rosbridge_library.internal.message_conversion` for message conversion.)
-
-This limitation can be overcome by defining custom bridge class, though.
-
-
-## Demo
-
-### Prerequisites
-
-```
-$ sudo apt install python3-pip
-$ sudo apt install ros-noetic-rosbridge-library
-$ sudo apt install mosquitto mosquitto-clients
-```
-
-### Install python modules
-
-```bash
-$ pip3 install -r requirements.txt
-```
-
-### launch node
-
-``` bash
-$ roslaunch mqtt_bridge demo.launch
-```
-
-Publish to `/ping`,
-
-```
-$ rostopic pub /ping std_msgs/Bool "data: true"
-```
-
-and see response to `/pong`.
-
-```
-$ rostopic echo /pong
-data: True
----
-```
-
-Publish "hello" to `/echo`,
-
-```
-$ rostopic pub /echo std_msgs/String "data: 'hello'"
-```
-
-and see response to `/back`.
-
-```
-$ rostopic echo /back
-data: hello
----
-```
-
-You can also see MQTT messages using `mosquitto_sub`
-
-```
-$ mosquitto_sub -t '#'
-```
-
 ## Usage
 
 parameter file (config.yaml):
@@ -158,9 +88,81 @@ bridge:
 * `msg_type`: ROS Message type transfering through the bridge.
 * `topic_from`: topic incoming from (ROS or MQTT)
 * `topic_to`: topic outgoing to (ROS or MQTT)
+**!!! topic_to not in use for ROS2MQTT bridge, output ROS Topic will inherit name from MQTT Topic (see `bridge.py` line 87)**
 
 Also, you can create custom bridge class by inheriting `mqtt_brige.bridge.Bridge`.
 
+
+
+[![CircleCI](https://circleci.com/gh/groove-x/mqtt_bridge.svg?style=svg)](https://circleci.com/gh/groove-x/mqtt_bridge)
+
+mqtt_bridge provides a functionality to bridge between ROS and MQTT in bidirectional.
+
+*mqtt_bridge is not actively maintained now. Feel free to check out [mqtt_client](https://github.com/ika-rwth-aachen/mqtt_client), a high-performance C++ ROS nodelet with recent development!*
+
+
+## Principle
+
+`mqtt_bridge` uses ROS message as its protocol. Messages from ROS are serialized by json (or messagepack) for MQTT, and messages from MQTT are deserialized for ROS topic. So MQTT messages should be ROS message compatible. (We use `rosbridge_library.internal.message_conversion` for message conversion.)
+
+This limitation can be overcome by defining custom bridge class, though.
+
+
+## Demo
+
+### Prerequisites
+
+```
+$ sudo apt install python3-pip
+$ sudo apt install ros-noetic-rosbridge-library
+$ sudo apt install mosquitto mosquitto-clients
+```
+
+### Install python modules
+
+```bash
+$ pip3 install -r requirements.txt
+```
+
+### launch node
+
+``` bash
+$ roslaunch mqtt_bridge demo.launch
+```
+
+Publish to `/ping`,
+
+```
+$ rostopic pub /ping std_msgs/Bool "data: true"
+```
+
+and see response to `/pong`.
+
+```
+$ rostopic echo /pong
+data: True
+---
+```
+
+Publish "hello" to `/echo`,
+
+```
+$ rostopic pub /echo std_msgs/String "data: 'hello'"
+```
+
+and see response to `/back`.
+
+```
+$ rostopic echo /back
+data: hello
+---
+```
+
+You can also see MQTT messages using `mosquitto_sub`
+
+```
+$ mosquitto_sub -t '#'
+```
 
 ## License
 
