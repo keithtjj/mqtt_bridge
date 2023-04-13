@@ -1,18 +1,22 @@
 ip:
   first:
-    host: broker
+    host: ugv1
     port: 1883
     priority: 1
   second:
-    host: ugv1
+    host: ugv2
     port: 1883
     priority: 2
   third:
-    host: ugv2
+    host: ugv3
     port: 1883
     priority: 3
+  fourth:
+    host: ugv4
+    port: 1883
+    priority: 4
   
-vehicle: vehicle/3
+vehicle: vehicle/1
 
 mqtt:
   client:
