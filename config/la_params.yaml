@@ -1,6 +1,6 @@
 ip:
   first:
-    host: ugv1
+    host: localhost
     port: 1883
     priority: 1
   second:
@@ -98,3 +98,13 @@ bridge:
     msg_type: geometry_msgs.msg:PoseStamped
     topic_from: vehicle/+/poi
     topic_to: /poi_in
+    # Publish vgraph from ROS to MQTT
+  - factory: mqtt_bridge.bridge:RosToMqttBridge
+    msg_type: visibility_graph_msg.msg:Graph
+    topic_from: /robot_vgraph
+    topic_to: vgraph
+    # Subscribe vgraph from MQTT to ROS  
+  - factory: mqtt_bridge.bridge:MqttToRosBridge
+    msg_type: visibility_graph_msg.msg:Graph
+    topic_from: vehicle/+/vgraph
+    topic_to: /lol
