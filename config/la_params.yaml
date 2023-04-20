@@ -1,6 +1,6 @@
 ip:
   first:
-    host: localhost
+    host: ugv1
     port: 1883
     priority: 1
   second:
