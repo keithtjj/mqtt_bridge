@@ -110,11 +110,11 @@ bridge:
     topic_to: /lol
     # Publish del_model from ROS to MQTT
   - factory: mqtt_bridge.bridge:RosToMqttBridge
-    msg_type: std_msg.msg:String
+    msg_type: std_msgs.msg:String
     topic_from: /del_model_out
     topic_to: del_model
     # Subscribe vgraph from MQTT to ROS  
   - factory: mqtt_bridge.bridge:MqttToRosBridge
-    msg_type: std_msg.msg:String
+    msg_type: std_msgs.msg:String
     topic_from: vehicle/+/del_model
     topic_to: /lol
