@@ -1,7 +1,7 @@
 import inject
 import paho.mqtt.client as mqtt
 import rospy
-
+from std_msgs.msg import String
 from .bridge import create_bridge
 from .mqtt_client import create_private_path_extractor
 from .util import lookup_object
@@ -124,6 +124,7 @@ def mqtt_bridge_node():
     rospy.on_shutdown(mqtt_client.loop_stop)
     rospy.spin()
 
+pub_refresh_mqtt = rospy.Publisher('/refresh_mqtt', String, queue_size=5)
 
 def _on_connect(client, userdata, flags, response_code):
     global connected
@@ -132,6 +133,7 @@ def _on_connect(client, userdata, flags, response_code):
         client.connected_flag=True #set flag
         connected = 1
         print(f"Connected to the broker {client._host}:{client._port}")
+        pub_refresh_mqtt.publish('refresh')
     else:
         print(f"Connection to the broker {client._host}:{client._port} failed with return code", response_code)
 
