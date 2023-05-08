@@ -78,15 +78,20 @@ bridge:
     msg_type: std_msgs.msg:Bool
     topic_from: vehicle/+/Availability
     topic_to: /ugv2priority
-    # Publish Availability from ROS to MQTT
+    # Publish tare-wp from ROS to MQTT
   - factory: mqtt_bridge.bridge:RosToMqttBridge
     msg_type: geometry_msgs.msg:PointStamped
     topic_from: /tare_way_point
-    topic_to: tare_waypoint
+    topic_to: planner_waypoint
+    # Publish far-wp from ROS to MQTT
+  - factory: mqtt_bridge.bridge:RosToMqttBridge
+    msg_type: geometry_msgs.msg:PointStamped
+    topic_from: /far_way_point
+    topic_to: planner_waypoint
     # Subscribe Availability from MQTT to ROS  
   - factory: mqtt_bridge.bridge:MqttToRosBridge
     msg_type: geometry_msgs.msg:PointStamped
-    topic_from: vehicle/+/tare_waypoint
+    topic_from: vehicle/+/planner_waypoint
     topic_to: /ugv2priority
     # Publish Poi from ROS to MQTT
   - factory: mqtt_bridge.bridge:RosToMqttBridge
