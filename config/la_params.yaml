@@ -28,15 +28,15 @@ mqtt:
 #serializer: json:dumps
 #deserializer: json:loads
 bridge:
-    # Publish Odometry from ROS to MQTT
+    # Publish posestamped from ROS to MQTT
   - factory: mqtt_bridge.bridge:RosToMqttBridge
-    msg_type: nav_msgs.msg:Odometry
-    topic_from: /state_estimation
-    topic_to: Odometry
-    # Subscribe Odometry from MQTT to ROS
+    msg_type: geometry_msgs.msg:PoseStamped
+    topic_from: /pose_stamp
+    topic_to: pose_stamp
+    # Subscribe posestamped from MQTT to ROS
   - factory: mqtt_bridge.bridge:MqttToRosBridge
-    msg_type: nav_msgs.msg:Odometry
-    topic_from: vehicle/+/Odometry
+    msg_type: geometry_msgs.msg:PoseStamped
+    topic_from: vehicle/+/pose_stamp
     topic_to: /pong
     # Publish Covered Subspace Indices from ROS to MQTT
   - factory: mqtt_bridge.bridge:RosToMqttBridge
