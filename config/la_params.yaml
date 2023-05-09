@@ -33,11 +33,13 @@ bridge:
     msg_type: geometry_msgs.msg:PoseStamped
     topic_from: /pose_stamp
     topic_to: pose_stamp
+    frequency: 10
     # Subscribe posestamped from MQTT to ROS
   - factory: mqtt_bridge.bridge:MqttToRosBridge
     msg_type: geometry_msgs.msg:PoseStamped
     topic_from: vehicle/+/pose_stamp
     topic_to: /pong
+    queue_size: 1
     # Publish Covered Subspace Indices from ROS to MQTT
   - factory: mqtt_bridge.bridge:RosToMqttBridge
     msg_type: std_msgs.msg:Int32MultiArray
