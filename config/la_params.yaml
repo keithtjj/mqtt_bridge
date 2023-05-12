@@ -33,7 +33,7 @@ bridge:
     msg_type: geometry_msgs.msg:PoseStamped
     topic_from: /pose_stamp
     topic_to: pose_stamp
-    frequency: 10
+    frequency: 5
     # Subscribe posestamped from MQTT to ROS
   - factory: mqtt_bridge.bridge:MqttToRosBridge
     msg_type: geometry_msgs.msg:PoseStamped
