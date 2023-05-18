@@ -42,22 +42,22 @@ bridge:
     queue_size: 1
     # Publish Covered Subspace Indices from ROS to MQTT
   - factory: mqtt_bridge.bridge:RosToMqttBridge
-    msg_type: std_msgs.msg:Int32MultiArray
+    msg_type: tare_msgs.msg:SubspaceArray
     topic_from: /sensor_coverage_planner/Covered_Subspace_Indices
     topic_to: Covered_subspaces
     # Subscribe Covered Subspace Indices from MQTT to ROS  
   - factory: mqtt_bridge.bridge:MqttToRosBridge
-    msg_type: std_msgs.msg:Int32MultiArray
+    msg_type: tare_msgs.msg:SubspaceArray
     topic_from: vehicle/+/Covered_subspaces
     topic_to: /covered_subspaces
     # Publish Exploring Subspace Indices from ROS to MQTT
   - factory: mqtt_bridge.bridge:RosToMqttBridge
-    msg_type: std_msgs.msg:Int32MultiArray
+    msg_type: tare_msgs.msg:SubspaceArray
     topic_from: /sensor_coverage_planner/Exploring_Subspace_Indices
     topic_to: Exploring_subspaces
     # Subscribe Exploring Subspace Indices from MQTT to ROS  
   - factory: mqtt_bridge.bridge:MqttToRosBridge
-    msg_type: std_msgs.msg:Int32MultiArray
+    msg_type: tare_msgs.msg:SubspaceArray
     topic_from: vehicle/+/Exploring_subspaces
     topic_to: /exploring_subspaces_2
     # Publish Robot Priority from ROS to MQTT
