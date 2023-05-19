@@ -1,6 +1,6 @@
 ip:
   first:
-    host: ugv1
+    host: localhost
     port: 1883
     priority: 1
   second:
@@ -42,12 +42,12 @@ bridge:
     queue_size: 1
     # Publish keypose node from ROS to MQTT
   - factory: mqtt_bridge.bridge:RosToMqttBridge
-    msg_type: nav_msgs.msg:Odometry
-    topic_from: /sensor_coverage_planner/new_keypose
+    msg_type: tare_msgs.msg:NodeAndEdge
+    topic_from: /sensor_coverage_planner/tare_planner_node/new_keypose
     topic_to: keypose_node
     # Subscribe keypose node from MQTT to ROS
   - factory: mqtt_bridge.bridge:MqttToRosBridge
-    msg_type: nav_msgs.msg:Odometry
+    msg_type: tare_msgs.msg:NodeAndEdge
     topic_from: vehicle/+/keypose_node
     topic_to: /bingS
     # Publish Covered Subspace Indices from ROS to MQTT
