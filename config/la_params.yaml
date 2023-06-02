@@ -40,16 +40,6 @@ bridge:
     topic_from: vehicle/+/pose_stamp
     topic_to: /pong
     queue_size: 1
-    # Publish keypose node from ROS to MQTT
-  - factory: mqtt_bridge.bridge:RosToMqttBridge
-    msg_type: tare_msgs.msg:NodeAndEdge
-    topic_from: /sensor_coverage_planner/tare_planner_node/new_keypose
-    topic_to: keypose_node
-    # Subscribe keypose node from MQTT to ROS
-  - factory: mqtt_bridge.bridge:MqttToRosBridge
-    msg_type: tare_msgs.msg:NodeAndEdge
-    topic_from: vehicle/+/keypose_node
-    topic_to: /bingS
     # Publish Covered Subspace Indices from ROS to MQTT
   - factory: mqtt_bridge.bridge:RosToMqttBridge
     msg_type: tare_msgs.msg:SubspaceArray
